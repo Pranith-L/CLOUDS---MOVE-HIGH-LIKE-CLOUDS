@@ -50,5 +50,5 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(clientDist)) {
 }
 
 app.listen(PORT, () => {
-  console.log(`🚀 CLOUDS Server running on http://localhost:${PORT}`);
+  console.log(`🚀 CLOUDS Server running on port ${PORT}`);
 });

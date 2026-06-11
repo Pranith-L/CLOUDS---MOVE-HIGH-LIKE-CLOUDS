@@ -13,6 +13,11 @@ export default function OAuthButtons() {
 
   return (
     <div className="oauth-wrap">
+      {!any && (
+        <p className="oauth-hint">
+          Social login needs keys in <code>server/.env</code> — then restart the API server.
+        </p>
+      )}
       <div className="oauth-divider">
         <span>{any ? 'Or continue with' : 'Social sign-in'}</span>
       </div>

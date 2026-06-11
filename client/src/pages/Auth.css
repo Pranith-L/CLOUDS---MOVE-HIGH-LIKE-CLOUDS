@@ -36,6 +36,18 @@
 .auth-switch a:hover { text-decoration: underline; }
 
 .oauth-wrap { margin-bottom: 8px; }
+.oauth-hint {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(212, 168, 83, 0.08);
+  border: 1px solid rgba(212, 168, 83, 0.25);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  text-align: center;
+}
+.oauth-hint code { color: var(--gold); font-size: 0.8rem; }
 .oauth-divider {
   display: flex; align-items: center; gap: 12px;
   color: var(--muted); font-size: 0.72rem;
