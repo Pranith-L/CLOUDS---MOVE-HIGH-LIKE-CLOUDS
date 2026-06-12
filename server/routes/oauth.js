@@ -1,12 +1,9 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { clientUrl, oauthRedirectBase } from '../utils/origins.js';
 
 const router = express.Router();
-
-const clientUrl = () => (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
-const oauthRedirectBase = () =>
-  (process.env.OAUTH_REDIRECT_BASE || process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
 
 const tokenForUser = (user) =>
   jwt.sign({ id: user._id.toString(), email: user.email, role: user.role }, process.env.JWT_SECRET, {
@@ -31,7 +28,7 @@ router.get('/google', (req, res) => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const secret = process.env.GOOGLE_CLIENT_SECRET;
   if (!clientId || !secret) return res.status(503).json({ message: 'Google sign-in is not configured.' });
-  const redirectUri = `${oauthRedirectBase()}/api/oauth/google/callback`;
+  const redirectUri = `${oauthRedirectBase(req)}/api/oauth/google/callback`;
   const q = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
@@ -48,7 +45,7 @@ router.get('/google/callback', async (req, res) => {
     if (req.query.error) return redirectFail(res, String(req.query.error_description || req.query.error));
     const code = req.query.code;
     if (!code) return redirectFail(res, 'Missing authorization code');
-    const redirectUri = `${oauthRedirectBase()}/api/oauth/google/callback`;
+    const redirectUri = `${oauthRedirectBase(req)}/api/oauth/google/callback`;
     const tokenBody = new URLSearchParams({
       code: String(code),
       client_id: process.env.GOOGLE_CLIENT_ID,
@@ -96,7 +93,7 @@ router.get('/facebook', (req, res) => {
   const appId = process.env.FACEBOOK_APP_ID;
   const secret = process.env.FACEBOOK_APP_SECRET;
   if (!appId || !secret) return res.status(503).json({ message: 'Facebook sign-in is not configured.' });
-  const redirectUri = `${oauthRedirectBase()}/api/oauth/facebook/callback`;
+  const redirectUri = `${oauthRedirectBase(req)}/api/oauth/facebook/callback`;
   const q = new URLSearchParams({
     client_id: appId,
     redirect_uri: redirectUri,
@@ -111,7 +108,7 @@ router.get('/facebook/callback', async (req, res) => {
     if (req.query.error) return redirectFail(res, String(req.query.error_description || req.query.error));
     const code = req.query.code;
     if (!code) return redirectFail(res, 'Missing authorization code');
-    const redirectUri = `${oauthRedirectBase()}/api/oauth/facebook/callback`;
+    const redirectUri = `${oauthRedirectBase(req)}/api/oauth/facebook/callback`;
     const appId = process.env.FACEBOOK_APP_ID;
     const appSecret = process.env.FACEBOOK_APP_SECRET;
     const tokenUrl = `https://graph.facebook.com/v19.0/oauth/access_token?${new URLSearchParams({
@@ -159,7 +156,7 @@ router.get('/instagram', (req, res) => {
   const clientId = process.env.INSTAGRAM_APP_ID;
   const secret = process.env.INSTAGRAM_APP_SECRET;
   if (!clientId || !secret) return res.status(503).json({ message: 'Instagram sign-in is not configured.' });
-  const redirectUri = `${oauthRedirectBase()}/api/oauth/instagram/callback`;
+  const redirectUri = `${oauthRedirectBase(req)}/api/oauth/instagram/callback`;
   const scope = process.env.INSTAGRAM_SCOPE || 'instagram_business_basic';
   const q = new URLSearchParams({
     client_id: clientId,
@@ -175,7 +172,7 @@ router.get('/instagram/callback', async (req, res) => {
     if (req.query.error) return redirectFail(res, String(req.query.error_description || req.query.error));
     const code = req.query.code;
     if (!code) return redirectFail(res, 'Missing authorization code');
-    const redirectUri = `${oauthRedirectBase()}/api/oauth/instagram/callback`;
+    const redirectUri = `${oauthRedirectBase(req)}/api/oauth/instagram/callback`;
     const form = new URLSearchParams({
       client_id: process.env.INSTAGRAM_APP_ID,
       client_secret: process.env.INSTAGRAM_APP_SECRET,

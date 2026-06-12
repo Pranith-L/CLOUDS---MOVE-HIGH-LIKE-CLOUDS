@@ -11,6 +11,7 @@ import orderRoutes from './routes/orders.js';
 import aiRoutes from './routes/ai.js';
 import oauthRoutes from './routes/oauth.js';
 import supportRoutes from './routes/support.js';
+import { corsOrigins, clientUrl } from './utils/origins.js';
 
 dotenv.config();
 
@@ -20,8 +21,14 @@ const clientDist = path.join(__dirname, '../client/dist');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = corsOrigins();
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    const normalized = origin.replace(/\/$/, '');
+    if (allowedOrigins.includes(normalized)) return callback(null, true);
+    return callback(new Error(`CORS blocked origin: ${origin}`));
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -51,4 +58,8 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(clientDist)) {
 
 app.listen(PORT, () => {
   console.log(`🚀 CLOUDS Server running on port ${PORT}`);
+  console.log(`🌐 CLIENT_URL (frontend): ${clientUrl()}`);
+  if (process.env.NODE_ENV === 'production' && clientUrl().includes('localhost')) {
+    console.warn('⚠️  Set CLIENT_URL to your Vercel URL on Render (e.g. https://your-app.vercel.app)');
+  }
 });
