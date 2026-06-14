@@ -10,6 +10,7 @@ const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
 export default function Products() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [selectedSizes, setSelectedSizes] = useState({})
   const [added, setAdded] = useState({})
   const { addItem } = useCart()
@@ -17,7 +18,10 @@ export default function Products() {
   useEffect(() => {
     axios.get('/api/products')
       .then(r => { setProducts(r.data); setLoading(false) })
-      .catch(() => setLoading(false))
+      .catch(() => {
+        setError('Could not load products. Check that the API is running and try again.')
+        setLoading(false)
+      })
   }, [])
 
   const handleSize = (id, size) => setSelectedSizes(p => ({ ...p, [id]: size }))
@@ -45,6 +49,10 @@ export default function Products() {
           <div className="products-grid">
             {[1,2,3,4].map(i => <div key={i} className="prod-card-skeleton skeleton" />)}
           </div>
+        ) : error ? (
+          <div className="products-empty">{error}</div>
+        ) : products.length === 0 ? (
+          <div className="products-empty">No products in the store yet. Please try again in a moment.</div>
         ) : (
           <div className="products-grid">
             {products.map((p, i) => (

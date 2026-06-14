@@ -12,6 +12,7 @@ import aiRoutes from './routes/ai.js';
 import oauthRoutes from './routes/oauth.js';
 import supportRoutes from './routes/support.js';
 import { corsOrigins, clientUrl } from './utils/origins.js';
+import { ensureDefaultProducts } from './utils/seedCatalog.js';
 
 dotenv.config();
 
@@ -35,7 +36,14 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/clouds-store')
-  .then(() => console.log('✅ MongoDB connected'))
+  .then(async () => {
+    console.log('✅ MongoDB connected');
+    try {
+      await ensureDefaultProducts();
+    } catch (err) {
+      console.error('❌ Product seed error:', err.message);
+    }
+  })
   .catch(err => console.error('❌ MongoDB error:', err));
 
 app.use('/api/auth', authRoutes);
