@@ -47,6 +47,7 @@
 .tee-swatch { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; }
 .tee-name { font-weight: 700; font-size: 1rem; flex: 1; }
 .tee-price { font-size: 1rem; font-weight: 700; color: var(--gold); }
+.tee-price-old { font-size: 0.82rem; font-weight: 600; color: var(--muted2); text-decoration: line-through; margin-right: 6px; }
 .tee-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
 .tee-cta { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; color: var(--gold); text-transform: uppercase; transition: var(--transition); }
 .tee-card:hover .tee-cta { letter-spacing: 0.14em; }

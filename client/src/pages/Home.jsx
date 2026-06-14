@@ -118,7 +118,7 @@ export default function Home() {
                   <div className="tee-card-row">
                     <span className="tee-swatch" style={{ background: t.hex, border: t.hex === '#f8f8f8' ? '1px solid #ccc' : 'none' }} />
                     <span className="tee-name">{t.name} Tee</span>
-                    <span className="tee-price">₹349</span>
+                    <span className="tee-price"><span className="tee-price-old">₹499</span> ₹349</span>
                   </div>
                   <p className="tee-desc">{t.desc}</p>
                   <div className="tee-cta">Customize →</div>

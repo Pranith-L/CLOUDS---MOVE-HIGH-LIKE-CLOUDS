@@ -92,7 +92,7 @@ export default function Products() {
                   <div className="prod-card-footer">
                     <div className="prod-price">
                       <span className="prod-price-main">₹{p.price}</span>
-                      <span className="prod-price-old">₹449</span>
+                      <span className="prod-price-old">₹499</span>
                     </div>
                     <div className="prod-actions">
                       <button
