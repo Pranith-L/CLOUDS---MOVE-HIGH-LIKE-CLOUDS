@@ -13,6 +13,7 @@ import oauthRoutes from './routes/oauth.js';
 import supportRoutes from './routes/support.js';
 import { corsOrigins, clientUrl } from './utils/origins.js';
 import { ensureDefaultProducts } from './utils/seedCatalog.js';
+import { ensureDefaultAdmin, getAdminBootstrapStatus } from './utils/ensureAdmin.js';
 import { assertJwtSecret } from './utils/security.js';
 
 dotenv.config();
@@ -50,8 +51,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/clouds-st
     console.log('✅ MongoDB connected');
     try {
       await ensureDefaultProducts();
+      await ensureDefaultAdmin();
     } catch (err) {
-      console.error('❌ Product seed error:', err.message);
+      console.error('❌ Startup seed error:', err.message);
     }
   })
   .catch(err => console.error('❌ MongoDB error:', err));
@@ -63,8 +65,13 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/ai', aiRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: '☁️ CLOUDS API is running' });
+app.get('/api/health', async (req, res) => {
+  try {
+    const admin = await getAdminBootstrapStatus();
+    res.json({ status: 'ok', message: '☁️ CLOUDS API is running', admin });
+  } catch {
+    res.json({ status: 'ok', message: '☁️ CLOUDS API is running' });
+  }
 });
 
 if (process.env.NODE_ENV === 'production' && fs.existsSync(clientDist)) {

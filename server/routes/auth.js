@@ -53,8 +53,14 @@ router.post('/register', authLimiter, async (req, res) => {
 router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: String(email).toLowerCase().trim() }).select('+password');
+    const normalizedEmail = String(email).toLowerCase().trim();
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
     if (!user) return res.status(400).json({ message: 'Invalid email or password.' });
+    if (!user.password) {
+      return res.status(400).json({
+        message: 'This account has no password (likely created with Google sign-in). Use Google to sign in, or ask the owner to set SEED_ADMIN_SYNC_PASSWORD=true on Render and redeploy once.'
+      });
+    }
     const valid = await user.comparePassword(password);
     if (!valid) return res.status(400).json({ message: 'Invalid email or password.' });
     const token = signToken(user);

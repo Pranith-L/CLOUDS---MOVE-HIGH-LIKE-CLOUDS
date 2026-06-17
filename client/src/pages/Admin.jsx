@@ -36,7 +36,16 @@ export default function Admin() {
 
   if (!user || user.role !== 'admin') return null
 
-  if (loading) return <div className="page-load"><span className="auth-spinner"/></div>
+  if (loading) {
+    return (
+      <main className="admin-page admin-page--loading">
+        <span className="auth-spinner" />
+      </main>
+    )
+  }
+
+  const pendingCount = orders.filter(o => o.status === 'pending').length
+  const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0)
 
   const parseJSON = (jsonStr) => {
     if (!jsonStr) return null
@@ -77,14 +86,43 @@ export default function Admin() {
   }
 
   return (
-    <main className="admin-page container">
-      <h1 className="display-md" style={{ marginBottom: '32px' }}>Admin Dashboard</h1>
-      {error && <p className="error-text">{error}</p>}
+    <main className="admin-page">
+      <div className="container admin-inner">
+        <header className="admin-header">
+          <p className="subheading text-gradient">Management</p>
+          <h1 className="display-md">Admin Dashboard</h1>
+          <p className="admin-lead">
+            Review customer orders, printing instructions, and shipping details in one place.
+          </p>
+        </header>
 
-      <div className="admin-orders">
-        {orders.length === 0 ? (
-          <p>No orders placed yet.</p>
-        ) : (
+        {error && <p className="error-text admin-error">{error}</p>}
+
+        {orders.length > 0 && (
+          <div className="admin-stats">
+            <div className="admin-stat-card glass">
+              <span className="admin-stat-value">{orders.length}</span>
+              <span className="admin-stat-label">Total Orders</span>
+            </div>
+            <div className="admin-stat-card glass">
+              <span className="admin-stat-value">{pendingCount}</span>
+              <span className="admin-stat-label">Pending</span>
+            </div>
+            <div className="admin-stat-card glass">
+              <span className="admin-stat-value">₹{totalRevenue.toLocaleString('en-IN')}</span>
+              <span className="admin-stat-label">Revenue</span>
+            </div>
+          </div>
+        )}
+
+        <div className="admin-orders">
+          {orders.length === 0 ? (
+            <div className="admin-empty glass">
+              <span className="admin-empty-icon">📦</span>
+              <h2>No orders yet</h2>
+              <p>Orders will appear here once customers start placing them.</p>
+            </div>
+          ) : (
           orders.map(order => (
             <div key={order._id} className="admin-order-card glass">
               <div className="admin-order-header">
@@ -138,7 +176,8 @@ export default function Admin() {
               </div>
             </div>
           ))
-        )}
+          )}
+        </div>
       </div>
     </main>
   )

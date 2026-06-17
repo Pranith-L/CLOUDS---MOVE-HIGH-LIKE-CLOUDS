@@ -4,7 +4,7 @@ import User from './server/models/User.js';
 
 dotenv.config({ path: './server/.env' });
 
-const email = process.argv[2];
+const email = (process.argv[2] || '').toLowerCase().trim();
 
 if (!email) {
   console.error('Please provide an email address. Example: node make-admin.js admin@example.com');

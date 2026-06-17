@@ -20,7 +20,7 @@ export default function Login() {
       await login(form.email, form.password)
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Try again.')
+      setError(err.response?.data?.message || (err.message?.includes('Network') ? 'Cannot reach the API. Confirm VITE_API_URL points to your Render backend, then redeploy Vercel.' : err.message) || 'Login failed. Try again.')
     } finally { setLoading(false) }
   }
 
