@@ -70,45 +70,47 @@ export default function Products() {
                       <span className="prod-swatch" style={{ background: p.colorHex, border: p.colorHex === '#f8f8f8' ? '1px solid #ccc' : 'none' }} />
                       <span className="prod-color-name">{p.color.charAt(0).toUpperCase() + p.color.slice(1)}</span>
                     </div>
-                    <h2 className="prod-name">{p.name}</h2>
+                    <h2 className="prod-name" style={{ marginBottom: '4px' }}>{p.name}</h2>
+                    
+                    <div className="prod-price" style={{ marginBottom: '12px', alignItems: 'center' }}>
+                      <span className="prod-price-main">₹{p.price}</span>
+                      <span className="prod-price-old">₹499</span>
+                    </div>
+
                     <p className="prod-desc">{p.description}</p>
                   </div>
 
-                  {/* Size and Price selector */}
-                  <div className="prod-sizes" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '16px' }}>
-                    <div>
-                      <p className="prod-sizes-label">Size: <strong>{selectedSizes[p._id] || 'M'}</strong></p>
-                      <div className="prod-size-btns">
-                        {SIZES.map(s => (
-                          <button key={s}
-                            className={`prod-size-btn ${(selectedSizes[p._id] || 'M') === s ? 'active' : ''}`}
-                            onClick={() => handleSize(p._id, s)}
-                            id={`size-${p._id}-${s}`}
-                          >{s}</button>
-                        ))}
-                      </div>
+                  {/* Size selector */}
+                  <div className="prod-sizes" style={{ marginTop: 'auto', marginBottom: '20px' }}>
+                    <div className="prod-sizes-label" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span>Select Size</span>
+                      <strong>{selectedSizes[p._id] || 'M'}</strong>
                     </div>
-                    <div className="prod-price" style={{ flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
-                      <span className="prod-price-main" style={{ lineHeight: 1 }}>₹{p.price}</span>
-                      <span className="prod-price-old">₹499</span>
+                    <div className="prod-size-btns" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                      {SIZES.map(s => (
+                        <button key={s}
+                          className={`prod-size-btn ${(selectedSizes[p._id] || 'M') === s ? 'active' : ''}`}
+                          onClick={() => handleSize(p._id, s)}
+                          id={`size-${p._id}-${s}`}
+                          style={{ textAlign: 'center', padding: '10px 0', width: '100%', margin: 0 }}
+                        >{s}</button>
+                      ))}
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="prod-card-footer" style={{ borderTop: 'none', paddingTop: 0 }}>
-                    <div className="prod-actions" style={{ display: 'flex', width: '100%', gap: '8px' }}>
-                      <button
-                        className={`btn ${added[p._id] ? 'btn-dark' : 'btn-primary'} prod-add-btn`}
-                        onClick={() => handleAdd(p)}
-                        id={`add-cart-${p._id}`}
-                        style={{ flex: 1 }}
-                      >
-                        {added[p._id] ? '✓ Added' : '+ Cart'}
-                      </button>
-                      <Link to={`/customize/${p.color}`} className="btn btn-ghost prod-cust-btn" id={`customize-${p._id}`} style={{ flex: 1, textAlign: 'center' }}>
-                        Customize
-                      </Link>
-                    </div>
+                  <div className="prod-card-footer" style={{ borderTop: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <button
+                      className={`btn ${added[p._id] ? 'btn-dark' : 'btn-primary'} prod-add-btn`}
+                      onClick={() => handleAdd(p)}
+                      id={`add-cart-${p._id}`}
+                      style={{ width: '100%', padding: '14px', justifyContent: 'center' }}
+                    >
+                      {added[p._id] ? '✓ Added to Cart' : 'Add to Cart'}
+                    </button>
+                    <Link to={`/customize/${p.color}`} className="btn btn-ghost prod-cust-btn" id={`customize-${p._id}`} style={{ width: '100%', padding: '14px', justifyContent: 'center' }}>
+                      Customize Design
+                    </Link>
                   </div>
                 </div>
               </div>
