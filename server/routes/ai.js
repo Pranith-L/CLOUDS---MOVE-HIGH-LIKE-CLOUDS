@@ -4,7 +4,6 @@ import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Generate AI image via HuggingFace Inference API
 router.post('/generate-image', authenticate, async (req, res) => {
   try {
     const { prompt } = req.body;
@@ -15,7 +14,6 @@ router.post('/generate-image', authenticate, async (req, res) => {
       return res.status(503).json({ message: 'AI service not configured. Please add your HuggingFace API key.' });
     }
 
-    // Use Stable Diffusion model
     const response = await fetch(
       'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1',
       {
@@ -33,7 +31,6 @@ router.post('/generate-image', authenticate, async (req, res) => {
 
     if (!response.ok) {
       const errText = await response.text();
-      // Model loading - tell client to retry
       if (response.status === 503) {
         return res.status(503).json({ message: 'AI model is loading, please retry in 20 seconds.' });
       }

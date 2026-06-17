@@ -259,3 +259,21 @@ input, textarea { font-family: inherit; }
 @media (min-width: 769px) {
   .hide-desktop { display: none !important; }
 }
+
+/* ── Custom Human Touches ── */
+body {
+  background: radial-gradient(circle at 50% 0%, var(--surface2) 0%, var(--black) 60%);
+  background-attachment: fixed;
+}
+
+.card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 40px rgba(212,168,83,0.12);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--gold) 0%, #ffe6a0 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

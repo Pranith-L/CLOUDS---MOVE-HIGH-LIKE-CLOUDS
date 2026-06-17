@@ -34,37 +34,31 @@ export default function Customizer() {
   const { user } = useAuth()
 
   const [teeColor, setTeeColor] = useState(routeColor in TEE_COLORS ? routeColor : 'black')
-  const [side, setSide] = useState('front') // front | back
-  const [activeTab, setActiveTab] = useState('text') // text | image | ai | stickers
+  const [side, setSide] = useState('front')
+  const [activeTab, setActiveTab] = useState('text')
   const [size, setSize] = useState('M')
   const [added, setAdded] = useState(false)
 
-  // Canvas refs (separate for front/back)
   const frontCanvasRef = useRef(null)
   const backCanvasRef  = useRef(null)
   const frontFabric = useRef(null)
   const backFabric  = useRef(null)
 
-  // Text controls
   const [textInput, setTextInput] = useState('YOUR TEXT')
   const [textColor, setTextColor] = useState('#ffffff')
   const [fontSize, setFontSize] = useState(28)
   const [fontFamily, setFontFamily] = useState('Outfit')
   const [textBold, setTextBold] = useState(false)
 
-  // AI
   const [aiPrompt, setAiPrompt] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError] = useState('')
   const [aiImage, setAiImage] = useState(null)
 
-  // File upload ref
   const fileRef = useRef(null)
 
-  // Active canvas helper
   const getCanvas = useCallback(() => side === 'front' ? frontFabric.current : backFabric.current, [side])
 
-  // Init Fabric canvases
   useEffect(() => {
     frontFabric.current = new fabric.Canvas(frontCanvasRef.current, {
       width: 280, height: 320,
@@ -82,7 +76,6 @@ export default function Customizer() {
     }
   }, [])
 
-  // Add text to active canvas
   const addText = () => {
     const canvas = getCanvas()
     if (!canvas) return
@@ -98,21 +91,18 @@ export default function Customizer() {
     canvas.renderAll()
   }
 
-  // Delete selected
   const deleteSelected = () => {
     const canvas = getCanvas()
     const obj = canvas?.getActiveObject()
     if (obj) { canvas.remove(obj); canvas.renderAll() }
   }
 
-  // Clear canvas
   const clearCanvas = () => {
     const canvas = getCanvas()
     canvas?.clear()
     canvas?.renderAll()
   }
 
-  // Upload image
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -130,7 +120,6 @@ export default function Customizer() {
     reader.readAsDataURL(file)
   }
 
-  // Add sticker
   const addSticker = (s) => {
     const canvas = getCanvas()
     if (!canvas) return
@@ -144,7 +133,6 @@ export default function Customizer() {
     canvas.renderAll()
   }
 
-  // AI Generate
   const generateAI = async () => {
     if (!aiPrompt.trim()) return
     if (!user) { navigate('/login'); return }
@@ -158,7 +146,6 @@ export default function Customizer() {
     } finally { setAiLoading(false) }
   }
 
-  // Place AI image on canvas
   const placeAIImage = () => {
     if (!aiImage) return
     const canvas = getCanvas()
@@ -171,7 +158,6 @@ export default function Customizer() {
     })
   }
 
-  // Export both sides and add to cart
   const handleAddToCart = async () => {
     const frontData = frontFabric.current?.toDataURL({ format: 'png', multiplier: 2 }) || null
     const backData  = backFabric.current?.toDataURL({ format: 'png', multiplier: 2 }) || null
@@ -222,10 +208,8 @@ export default function Customizer() {
 
       <div className="container customizer-layout">
 
-        {/* ── LEFT PANEL: Tools ── */}
         <div className="cust-panel glass">
 
-          {/* Color selector */}
           <div className="panel-section">
             <p className="panel-label">Tee Color</p>
             <div className="color-swatches">
@@ -240,7 +224,6 @@ export default function Customizer() {
             </div>
           </div>
 
-          {/* Side toggle */}
           <div className="panel-section">
             <p className="panel-label">Side</p>
             <div className="side-toggle">
@@ -249,7 +232,6 @@ export default function Customizer() {
             </div>
           </div>
 
-          {/* Tool tabs */}
           <div className="panel-section">
             <div className="tool-tabs">
               {[['text','📝 Text'],['image','🖼 Image'],['ai','✨ AI Art'],['stickers','🏷 Stickers']].map(([k,l]) => (
@@ -258,7 +240,6 @@ export default function Customizer() {
               ))}
             </div>
 
-            {/* TEXT */}
             {activeTab === 'text' && (
               <div className="tool-content">
                 <textarea className="input text-area-input" rows={2}
@@ -289,7 +270,6 @@ export default function Customizer() {
               </div>
             )}
 
-            {/* IMAGE */}
             {activeTab === 'image' && (
               <div className="tool-content">
                 <div className="upload-zone" onClick={() => fileRef.current?.click()} id="upload-zone">
@@ -302,7 +282,6 @@ export default function Customizer() {
               </div>
             )}
 
-            {/* AI */}
             {activeTab === 'ai' && (
               <div className="tool-content">
                 <p className="caption" style={{ marginBottom: 10, lineHeight: 1.6 }}>
@@ -328,7 +307,6 @@ export default function Customizer() {
               </div>
             )}
 
-            {/* STICKERS */}
             {activeTab === 'stickers' && (
               <div className="tool-content">
                 <p className="caption" style={{ marginBottom: 12 }}>Click a sticker to add it to the canvas.</p>
@@ -341,7 +319,6 @@ export default function Customizer() {
             )}
           </div>
 
-          {/* Canvas actions */}
           <div className="panel-section">
             <p className="panel-label">Canvas Actions</p>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -351,20 +328,16 @@ export default function Customizer() {
           </div>
         </div>
 
-        {/* ── CENTER: Tee Preview ── */}
         <div className="cust-preview">
           <div className="tee-preview-wrap" style={{ '--tee-color': colorConfig.hex }}>
-            {/* SVG T-shirt background */}
             <div className="tee-bg-wrap">
               <TeeBgSVG color={colorConfig.hex} />
             </div>
 
-            {/* Fabric canvas overlay — front */}
             <div className={`canvas-overlay ${side === 'front' ? 'canvas-active' : 'canvas-hidden'}`}>
               <canvas ref={frontCanvasRef} id="front-canvas" />
             </div>
 
-            {/* Fabric canvas overlay — back */}
             <div className={`canvas-overlay ${side === 'back' ? 'canvas-active' : 'canvas-hidden'}`}>
               <canvas ref={backCanvasRef} id="back-canvas" />
             </div>
@@ -372,7 +345,6 @@ export default function Customizer() {
             <div className="tee-side-label">{side === 'front' ? 'FRONT' : 'BACK'}</div>
           </div>
 
-          {/* Color label */}
           <div className="tee-preview-info">
             <span className="tee-preview-dot" style={{ background: colorConfig.hex, border: colorConfig.hex === '#f8f8f8' ? '1px solid #ccc' : 'none' }} />
             <span>{colorConfig.label} Tee</span>
@@ -381,7 +353,6 @@ export default function Customizer() {
           </div>
         </div>
 
-        {/* ── RIGHT: Quick tips ── */}
         <div className="cust-tips glass">
           <h3 className="panel-label" style={{ marginBottom: 20 }}>How to Use</h3>
           {[

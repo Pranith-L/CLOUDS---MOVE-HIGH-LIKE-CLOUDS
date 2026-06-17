@@ -22,7 +22,6 @@ function notifyInbox() {
   return (process.env.SUPPORT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
 }
 
-// Create support request (public; attach user if JWT present)
 router.post('/requests', optionalAuth, async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
@@ -54,7 +53,6 @@ router.post('/requests', optionalAuth, async (req, res) => {
   }
 });
 
-// List requests (own threads, or all for admin)
 router.get('/requests', authenticate, async (req, res) => {
   try {
     let query = {};
@@ -70,7 +68,6 @@ router.get('/requests', authenticate, async (req, res) => {
   }
 });
 
-// Single request + replies (owner or admin)
 router.get('/requests/:id', authenticate, async (req, res) => {
   try {
     const reqDoc = await SupportRequest.findById(req.params.id).lean();
@@ -91,7 +88,6 @@ router.get('/requests/:id', authenticate, async (req, res) => {
   }
 });
 
-// Staff reply → saved + email to customer
 router.post('/requests/:id/replies', authenticate, isAdmin, async (req, res) => {
   try {
     const { message } = req.body;
