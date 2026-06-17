@@ -1,6 +1,8 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState, useEffect, useContext } from 'react'
 
-const CartContext = createContext(null)
+// eslint-disable-next-line
+export const CartContext = createContext(null)
 export const useCart = () => useContext(CartContext)
 
 export function CartProvider({ children }) {

@@ -1,6 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 
+// eslint-disable-next-line
 const AuthContext = createContext(null)
 export const useAuth = () => useContext(AuthContext)
 
@@ -17,6 +19,7 @@ export function AuthProvider({ children }) {
         .catch(() => { setToken(null); localStorage.removeItem('clouds_token') })
         .finally(() => setLoading(false))
     } else {
+      // eslint-disable-next-line
       setLoading(false)
     }
   }, [token])

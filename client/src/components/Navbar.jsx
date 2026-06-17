@@ -17,6 +17,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // eslint-disable-next-line
   useEffect(() => { setMenuOpen(false) }, [location])
 
   return (

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { useCart } from '../context/CartContext'
 import { getTeeImage } from '../teeImages'
 import './Products.css'
 
@@ -12,8 +11,6 @@ export default function Products() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedSizes, setSelectedSizes] = useState({})
-  const [added, setAdded] = useState({})
-  const { addItem } = useCart()
 
   useEffect(() => {
     axios.get('/api/products')
@@ -25,13 +22,6 @@ export default function Products() {
   }, [])
 
   const handleSize = (id, size) => setSelectedSizes(p => ({ ...p, [id]: size }))
-
-  const handleAdd = (product) => {
-    const size = selectedSizes[product._id] || 'M'
-    addItem(product, size)
-    setAdded(p => ({ ...p, [product._id]: true }))
-    setTimeout(() => setAdded(p => ({ ...p, [product._id]: false })), 1800)
-  }
 
   return (
     <main className="products-page">

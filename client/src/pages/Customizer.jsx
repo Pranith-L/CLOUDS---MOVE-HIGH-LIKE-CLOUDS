@@ -59,6 +59,15 @@ export default function Customizer() {
 
   const getCanvas = useCallback(() => side === 'front' ? frontFabric.current : backFabric.current, [side])
 
+  const updateActiveText = (key, val) => {
+    const canvas = getCanvas()
+    const obj = canvas?.getActiveObject()
+    if (obj && obj.type === 'i-text') {
+      obj.set(key, val)
+      canvas.renderAll()
+    }
+  }
+
   useEffect(() => {
     frontFabric.current = new fabric.Canvas(frontCanvasRef.current, {
       width: 280, height: 320,
@@ -75,6 +84,33 @@ export default function Customizer() {
       backFabric.current?.dispose()
     }
   }, [])
+
+  useEffect(() => {
+    const handleSelection = (e) => {
+      const obj = e.selected?.[0] || getCanvas()?.getActiveObject()
+      if (obj && obj.type === 'i-text') {
+        if (obj.text) setTextInput(obj.text)
+        if (obj.fill) setTextColor(obj.fill)
+        if (obj.fontSize) setFontSize(obj.fontSize)
+        if (obj.fontFamily) setFontFamily(obj.fontFamily)
+        if (obj.fontWeight) setTextBold(obj.fontWeight === 'bold')
+      }
+    }
+    const fCanvas = frontFabric.current
+    const bCanvas = backFabric.current
+    
+    fCanvas?.on('selection:created', handleSelection)
+    fCanvas?.on('selection:updated', handleSelection)
+    bCanvas?.on('selection:created', handleSelection)
+    bCanvas?.on('selection:updated', handleSelection)
+
+    return () => {
+      fCanvas?.off('selection:created', handleSelection)
+      fCanvas?.off('selection:updated', handleSelection)
+      bCanvas?.off('selection:created', handleSelection)
+      bCanvas?.off('selection:updated', handleSelection)
+    }
+  }, [side, getCanvas])
 
   const addText = () => {
     const canvas = getCanvas()
@@ -243,30 +279,48 @@ export default function Customizer() {
             {activeTab === 'text' && (
               <div className="tool-content">
                 <textarea className="input text-area-input" rows={2}
-                  value={textInput} onChange={e => setTextInput(e.target.value)}
+                  value={textInput} onChange={e => {
+                    setTextInput(e.target.value)
+                    updateActiveText('text', e.target.value)
+                  }}
                   placeholder="Type your text..." />
                 <div className="tool-row">
                   <div className="tool-field">
                     <label>Color</label>
-                    <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="color-pick" />
+                    <input type="color" value={textColor} onChange={e => {
+                      setTextColor(e.target.value)
+                      updateActiveText('fill', e.target.value)
+                    }} className="color-pick" />
                   </div>
                   <div className="tool-field">
                     <label>Size</label>
                     <input type="number" value={fontSize} min={10} max={80}
-                      onChange={e => setFontSize(Number(e.target.value))} className="input num-input" />
+                      onChange={e => {
+                        setFontSize(Number(e.target.value))
+                        updateActiveText('fontSize', Number(e.target.value))
+                      }} className="input num-input" />
                   </div>
                   <div className="tool-field">
                     <label>Bold</label>
-                    <button className={`bold-btn ${textBold ? 'active' : ''}`} onClick={() => setTextBold(b => !b)}>B</button>
+                    <button className={`bold-btn ${textBold ? 'active' : ''}`} onClick={() => {
+                      setTextBold(b => {
+                        const next = !b
+                        updateActiveText('fontWeight', next ? 'bold' : 'normal')
+                        return next
+                      })
+                    }}>B</button>
                   </div>
                 </div>
                 <div className="tool-field" style={{ marginBottom: 0 }}>
                   <label>Font</label>
-                  <select className="input" value={fontFamily} onChange={e => setFontFamily(e.target.value)}>
+                  <select className="input" value={fontFamily} onChange={e => {
+                    setFontFamily(e.target.value)
+                    updateActiveText('fontFamily', e.target.value)
+                  }}>
                     {FONTS.map(f => <option key={f} value={f}>{f}</option>)}
                   </select>
                 </div>
-                <button className="btn btn-primary" onClick={addText} id="add-text-btn">Add Text →</button>
+                <button className="btn btn-primary" onClick={addText} id="add-text-btn">Add New Text →</button>
               </div>
             )}
 

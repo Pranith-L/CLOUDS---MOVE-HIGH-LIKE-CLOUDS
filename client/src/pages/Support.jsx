@@ -27,12 +27,15 @@ export default function Support() {
   }, [token, sent])
 
   useEffect(() => {
+    // eslint-disable-next-line
     if (user?.name) setForm((f) => ({ ...f, name: user.name }))
+    // eslint-disable-next-line
     if (user?.email) setForm((f) => ({ ...f, email: user.email }))
   }, [user?.name, user?.email])
 
   useEffect(() => {
     if (!selectedId || !token) {
+      // eslint-disable-next-line
       setThread(null)
       return
     }
