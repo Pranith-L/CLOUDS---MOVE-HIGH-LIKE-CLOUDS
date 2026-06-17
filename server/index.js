@@ -13,14 +13,24 @@ import oauthRoutes from './routes/oauth.js';
 import supportRoutes from './routes/support.js';
 import { corsOrigins, clientUrl } from './utils/origins.js';
 import { ensureDefaultProducts } from './utils/seedCatalog.js';
+import { assertJwtSecret } from './utils/security.js';
 
 dotenv.config();
+
+try {
+  assertJwtSecret();
+} catch (err) {
+  console.error(`❌ ${err.message}`);
+  process.exit(1);
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDist = path.join(__dirname, '../client/dist');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.set('trust proxy', 1);
 
 const allowedOrigins = corsOrigins();
 app.use(cors({

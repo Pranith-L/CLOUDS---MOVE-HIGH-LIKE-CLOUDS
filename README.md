@@ -28,3 +28,17 @@ https://clouds-move-high-like-clouds.onrender.com/api/oauth/google/callback
 ```
 
 After changing env vars, **redeploy** Render and Vercel.
+
+## Security (production)
+
+Set on **Render** (never commit real values):
+
+| Variable | Requirement |
+|----------|-------------|
+| `JWT_SECRET` | `openssl rand -base64 48` — min 32 chars, unique |
+| `SEED_ADMIN_PASSWORD` | Min 12 chars — **not** `Admin123!` |
+| `NODE_ENV` | `production` |
+
+- Admin role is verified from **MongoDB**, not JWT alone.
+- Login/register are **rate limited** (12 attempts / 15 min per IP).
+- Passwords: min **8** characters; admin seed min **12**.
