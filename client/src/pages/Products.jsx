@@ -100,16 +100,8 @@ export default function Products() {
 
                   {/* Actions */}
                   <div className="prod-card-footer" style={{ borderTop: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <button
-                      className={`btn ${added[p._id] ? 'btn-dark' : 'btn-primary'} prod-add-btn`}
-                      onClick={() => handleAdd(p)}
-                      id={`add-cart-${p._id}`}
-                      style={{ width: '100%', padding: '14px', justifyContent: 'center' }}
-                    >
-                      {added[p._id] ? '✓ Added to Cart' : 'Add to Cart'}
-                    </button>
-                    <Link to={`/customize/${p.color}`} className="btn btn-ghost prod-cust-btn" id={`customize-${p._id}`} style={{ width: '100%', padding: '14px', justifyContent: 'center' }}>
-                      Customize Design
+                    <Link to={`/customize/${p.color}`} className="btn btn-primary prod-cust-btn" id={`customize-${p._id}`} style={{ width: '100%', padding: '14px', justifyContent: 'center' }}>
+                      Customize to Buy
                     </Link>
                   </div>
                 </div>

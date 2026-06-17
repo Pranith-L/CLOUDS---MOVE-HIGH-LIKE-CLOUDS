@@ -44,7 +44,7 @@ export default function Customizer() {
   const frontFabric = useRef(null)
   const backFabric  = useRef(null)
 
-  const [textInput, setTextInput] = useState('YOUR TEXT')
+  const [textInput, setTextInput] = useState('')
   const [textColor, setTextColor] = useState('#ffffff')
   const [fontSize, setFontSize] = useState(28)
   const [fontFamily, setFontFamily] = useState('Outfit')
