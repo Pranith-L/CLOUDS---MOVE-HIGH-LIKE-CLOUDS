@@ -11,6 +11,8 @@ const orderItemSchema = new mongoose.Schema({
   customization: {
     frontImage: String,
     backImage: String,
+    frontJSON: String,
+    backJSON: String,
     hasCustomization: { type: Boolean, default: false }
   }
 });

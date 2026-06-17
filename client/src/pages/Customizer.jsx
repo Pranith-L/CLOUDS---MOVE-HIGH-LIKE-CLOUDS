@@ -199,6 +199,8 @@ export default function Customizer() {
     const backData  = backFabric.current?.toDataURL({ format: 'png', multiplier: 2 }) || null
     const frontObjs = frontFabric.current?.getObjects().length > 0
     const backObjs  = backFabric.current?.getObjects().length > 0
+    const frontJSON = frontObjs ? JSON.stringify(frontFabric.current.toJSON()) : null
+    const backJSON  = backObjs ? JSON.stringify(backFabric.current.toJSON()) : null
 
     const productMock = {
       _id: `${teeColor}-tee`,
@@ -211,6 +213,8 @@ export default function Customizer() {
     addItem(productMock, size, 1, {
       frontImage: frontObjs ? frontData : null,
       backImage: backObjs ? backData : null,
+      frontJSON,
+      backJSON,
       hasCustomization: frontObjs || backObjs,
     })
 

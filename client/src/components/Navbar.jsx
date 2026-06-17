@@ -48,6 +48,9 @@ export default function Navbar() {
             {count > 0 && <span className="navbar__badge">{count}</span>}
           </Link>
 
+          {user && user.role === 'admin' && (
+            <Link to="/admin" className="navbar__user-name" style={{ color: 'var(--gold)', marginRight: '16px' }}>Admin Panel</Link>
+          )}
           {user ? (
             <div className="navbar__user">
               <span className="navbar__user-name">{user.name.split(' ')[0]}</span>
