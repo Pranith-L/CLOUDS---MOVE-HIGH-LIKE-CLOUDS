@@ -74,35 +74,38 @@ export default function Products() {
                     <p className="prod-desc">{p.description}</p>
                   </div>
 
-                  {/* Size selector */}
-                  <div className="prod-sizes">
-                    <p className="prod-sizes-label">Size: <strong>{selectedSizes[p._id] || 'M'}</strong></p>
-                    <div className="prod-size-btns">
-                      {SIZES.map(s => (
-                        <button key={s}
-                          className={`prod-size-btn ${(selectedSizes[p._id] || 'M') === s ? 'active' : ''}`}
-                          onClick={() => handleSize(p._id, s)}
-                          id={`size-${p._id}-${s}`}
-                        >{s}</button>
-                      ))}
+                  {/* Size and Price selector */}
+                  <div className="prod-sizes" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '16px' }}>
+                    <div>
+                      <p className="prod-sizes-label">Size: <strong>{selectedSizes[p._id] || 'M'}</strong></p>
+                      <div className="prod-size-btns">
+                        {SIZES.map(s => (
+                          <button key={s}
+                            className={`prod-size-btn ${(selectedSizes[p._id] || 'M') === s ? 'active' : ''}`}
+                            onClick={() => handleSize(p._id, s)}
+                            id={`size-${p._id}-${s}`}
+                          >{s}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="prod-price" style={{ flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+                      <span className="prod-price-main" style={{ lineHeight: 1 }}>₹{p.price}</span>
+                      <span className="prod-price-old">₹499</span>
                     </div>
                   </div>
 
-                  {/* Price + Actions */}
-                  <div className="prod-card-footer">
-                    <div className="prod-price">
-                      <span className="prod-price-main">₹{p.price}</span>
-                      <span className="prod-price-old">₹499</span>
-                    </div>
-                    <div className="prod-actions">
+                  {/* Actions */}
+                  <div className="prod-card-footer" style={{ borderTop: 'none', paddingTop: 0 }}>
+                    <div className="prod-actions" style={{ display: 'flex', width: '100%', gap: '8px' }}>
                       <button
                         className={`btn ${added[p._id] ? 'btn-dark' : 'btn-primary'} prod-add-btn`}
                         onClick={() => handleAdd(p)}
                         id={`add-cart-${p._id}`}
+                        style={{ flex: 1 }}
                       >
                         {added[p._id] ? '✓ Added' : '+ Cart'}
                       </button>
-                      <Link to={`/customize/${p.color}`} className="btn btn-ghost prod-cust-btn" id={`customize-${p._id}`}>
+                      <Link to={`/customize/${p.color}`} className="btn btn-ghost prod-cust-btn" id={`customize-${p._id}`} style={{ flex: 1, textAlign: 'center' }}>
                         Customize
                       </Link>
                     </div>
